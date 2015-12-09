@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Daniel Jørgensen & René Nielsen
+* @author Daniel Jørgensen & René Nielsen
  */
 public class ChatterBox_Client
 {
