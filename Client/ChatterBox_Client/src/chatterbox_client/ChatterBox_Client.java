@@ -11,16 +11,16 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -41,6 +41,9 @@ public class ChatterBox_Client
         userNick = nick;
         serverIp = ip;
         serverPort = port;
+        
+        ViewModel vm = new ViewModel(nick,ip,port);
+        
     }
     
     public void display()
@@ -76,8 +79,21 @@ public class ChatterBox_Client
         roomsUsers.getChildren().addAll(chatrooms, users);
         
         //Chat
-        TextArea output = new TextArea();
-        output.setEditable(false);        
+        //TextArea output = new TextArea();
+        //output.setEditable(false);                
+        GridPane output = new GridPane();
+        output.setHgap(10);
+        output.setVgap(5);
+        output.add(new Label("Date"),1,2);
+        output.add(new Label("test"),1,2);
+        output.add(new Label("Message"),2,2);
+        
+        output.add(new Label("Date"),1,2);
+        output.add(new Label("otherUser"),4,3);
+        output.add(new Label("Message2"),2,3);
+
+        
+        
         
         TextArea input = new TextArea();
         input.setMaxHeight(60);        
@@ -104,6 +120,6 @@ public class ChatterBox_Client
                 
         window.setScene(scene);
         window.show();
-    }
+    }        
     
 }
