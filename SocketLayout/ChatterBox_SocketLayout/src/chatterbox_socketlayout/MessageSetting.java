@@ -11,6 +11,12 @@ package chatterbox_socketlayout;
  */
 public class MessageSetting extends Message
 {
+    /* Subtypes
+    1 : Get all users, chatrooms with messages (initial connection)
+    2 : Get chatroom
+    3 : Get private conversation    
+    
+    */
     private String chat;
 
     public String getChat()
