@@ -64,7 +64,7 @@ public class MessageHandler
     
     public String convertMessageToSocketString(Message message) throws Exception
     {
-        String socketString =  message.getType().toString() +
+        String socketString =  message.getType().ordinal() +
                 ";" + message.getSubType() + 
                 ";" + Message.dateFormat.format(message.getTime());
         switch (message.getType())
