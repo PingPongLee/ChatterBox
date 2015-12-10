@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import chatterbox_socketlayout.*;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,24 +24,58 @@ import java.util.logging.Logger;
 public class ClientSocket extends Thread
 {
     private Socket socket;
-    private ChatHandler chatHandler;
+    private ChatRoomHandler chatRoomHandler;
+    private ClientHandler clientHandler;
     private MessageHandler msgHandler;
+    private DataOutputStream outputStream = null;
+    private String chatRoomName = "";
+    private String clientName = "";
 
-    public ClientSocket(Socket socket, ChatHandler chatHandler) 
+    public ClientSocket(Socket socket, ChatRoomHandler chatRoomHandler, ClientHandler clientHandler) 
     {
         this.socket = socket;
-        this.chatHandler = chatHandler;
+        this.chatRoomHandler = chatRoomHandler;
+        this.clientHandler = clientHandler;
         msgHandler = new MessageHandler();
     }
+
+    public DataOutputStream getOutputStream() 
+    {
+        return outputStream;
+    }
+
+    public String getChatRoomName() 
+    {
+        return chatRoomName;
+    }
+
+    public void setChatRoomName(String chatRoomName) 
+    {
+        this.chatRoomName = chatRoomName;
+    }
+
+    public String getClientName()
+    {
+        return clientName;
+    }
+
+    public void setClientName(String clientName)
+    {
+        this.clientName = clientName;
+    }
+    
+    
 
     public void run() 
     {
         InputStream inputStream = null;
         DataInputStream dataInputStream = null;
+        
         try 
         {
             inputStream = socket.getInputStream();
             dataInputStream = new DataInputStream(inputStream);
+            outputStream = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) 
         {
             return;
@@ -54,11 +89,22 @@ public class ClientSocket extends Thread
                 if ((line != null)) 
                 {
                     Message msg = msgHandler.convertSocketStringToMessage(line);
+                    new HandleDataFromClient(msg, this,chatRoomHandler, clientHandler).run();
                 }
             } 
             catch (IOException e) 
             {
                 e.printStackTrace();
+                try
+                {
+                    clientHandler.removeClient(this);
+                    new HandleDataFromClient(null, this,chatRoomHandler, clientHandler).sendAllUsersToAllUsers();
+                    socket.close();
+                    
+                } catch (IOException ex)
+                {
+                    ex.printStackTrace();
+                }
                 return;
             } catch (Exception ex)
             {

@@ -30,4 +30,9 @@ public class ClientHandler
     {
         return clientSockets;
     }
+    
+    public synchronized void removeClient(ClientSocket socket)
+    {
+        clientSockets.remove(socket);
+    }
 }

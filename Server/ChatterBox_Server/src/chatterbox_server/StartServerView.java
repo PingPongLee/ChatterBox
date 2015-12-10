@@ -46,8 +46,8 @@ public class StartServerView extends Application
         txtPort.setText("4545");
         Button btnStart = new Button("Start Server");
         btnStart.setOnAction(e -> {                        
-           ServerSocketHandler  ssh = new ServerSocketHandler(parseInt(txtPort.getText()), new ChatHandler(), new ClientHandler());
-           ssh.start();
+           ServerView sv = new ServerView(parseInt(txtPort.getText()));
+           sv.display();
         });
         
         GridPane table = new GridPane();

@@ -18,13 +18,13 @@ import java.net.Socket;
 public class ServerSocketHandler extends Thread
 {
     int port;
-    ChatHandler chatHandler;
+    ChatRoomHandler chatRoomHandler;
     ClientHandler clientHandler;
     
-    public ServerSocketHandler(int port, ChatHandler chatHandler, ClientHandler clientHandler)
+    public ServerSocketHandler(int port, ChatRoomHandler chatRoomHandler, ClientHandler clientHandler)
     {
         this.port = port;
-        this.chatHandler = chatHandler;
+        this.chatRoomHandler = chatRoomHandler;
         this.clientHandler = clientHandler;
     }
     
@@ -49,9 +49,10 @@ public class ServerSocketHandler extends Thread
                 socket = serverSocket.accept();
             } catch (IOException e) {
                 System.out.println("I/O error: " + e);
+                continue;
             }
             // Add new client to list and start lisning to the client
-            ClientSocket cs = new ClientSocket(socket, chatHandler);
+            ClientSocket cs = new ClientSocket(socket, chatRoomHandler, clientHandler);
             clientHandler.addClientSocketToList(cs);
             cs.start();
         }
