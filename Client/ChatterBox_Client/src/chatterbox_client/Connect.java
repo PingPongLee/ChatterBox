@@ -6,11 +6,11 @@
 package chatterbox_client;
 
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
-
 import chatterbox_socketlayout.*;
+import java.io.DataInputStream;
+import java.io.InputStream;
 import java.util.Date;
 
 /**
@@ -21,18 +21,28 @@ public class Connect
 {
     String serverIp;
     int serverPort;
+    String userNick;
     
     Socket client;
     
-    public Connect(String ip, int port)
+    ChatterBox_Client view;
+    
+    public Connect(String ip, int port, String nick, ChatterBox_Client vm)
     {
         serverIp = ip;
         serverPort = port;
+        userNick = nick;
+        view = vm;
+        InputStream inputStream = null;
+        DataInputStream dataInputStream = null;        
         System.out.println("Tilslutter til " + ip + " på port " + port);
         try
         {
             client = new Socket(ip, port);
             System.out.println("Forbundet til " + client.getRemoteSocketAddress());
+            Listener listen = new Listener(client, vm);  
+            listen.start();
+            System.out.println("Listening...");
         } 
         catch (Exception ex)
         {           
@@ -46,8 +56,19 @@ public class Connect
         conn.setType(messageType.setting);
         conn.setSubType(1);
         conn.setTime(new Date());
+        conn.setChat(userNick);
         return transmitData(conn);
     }        
+    
+    public boolean sendMessage(MessageChat msg)
+    {
+        return transmitData(msg);
+    }
+    
+    public boolean getMessagesFromChatroom(MessageSetting chatroom)
+    {
+        return transmitData(chatroom);
+    }
     
     public boolean getChatrooms()
     {
@@ -56,6 +77,11 @@ public class Connect
         chatrooms.setSubType(2);
         chatrooms.setTime(new Date());        
         return transmitData(chatrooms);
+    }
+    
+    public boolean creeateNewChatroom(Message newChatRoom)
+    {
+        return transmitData(newChatRoom);
     }
     
     public boolean getUsers()
@@ -78,15 +104,17 @@ public class Connect
             OutputStream outToServer = client.getOutputStream();
             DataOutputStream out = new DataOutputStream(outToServer);
             out.writeUTF(transmitPacket);    
+            System.out.println("Transmit success");
             return true;
         }
         catch(Exception e)
         {
+            System.out.println("Failed to transmit data packet!");
             return false;
         }                                    
     }
     
-    private String retrieveData()
+    private Message retrieveData()
     {
         try
         {
@@ -96,8 +124,8 @@ public class Connect
         catch(Exception e)
         {
             
-        }       
-        return "";
+        }    
+        return null;
     }
     
 }

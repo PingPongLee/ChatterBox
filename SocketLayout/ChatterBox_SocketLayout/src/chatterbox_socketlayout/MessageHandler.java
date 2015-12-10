@@ -39,8 +39,16 @@ public class MessageHandler
                 message = new MessageSetting(); 
                 message.setType(type);
                 message.setSubType(parseInt(socketStringArray[1]));
-                message.setTime(Message.dateFormat.parse(socketStringArray[2]));
-                ((MessageSetting)message).setChat(socketStringArray[3]);
+                message.setTime(Message.dateFormat.parse(socketStringArray[2]));                
+                if(socketStringArray.length > 3)
+                {                    
+                    String messageTotal = socketStringArray[3];
+                    for (int i = 4; i < socketStringArray.length; i++)
+                    {
+                        messageTotal += ";" + socketStringArray[i];
+                    }
+                    ((MessageSetting)message).setChat(messageTotal);
+                }                
                 break;
             case Chat:
                 message = new MessageChat();

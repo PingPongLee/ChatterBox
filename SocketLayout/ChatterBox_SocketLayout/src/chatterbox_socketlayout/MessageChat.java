@@ -11,6 +11,11 @@ package chatterbox_socketlayout;
  */
 public class MessageChat extends Message
 {
+    /* Subtypes
+    1 : Messagetype public
+    2 : Messagetype private
+
+    */
     private String chat;
     private String messageFrom;
     private String message;
@@ -20,7 +25,7 @@ public class MessageChat extends Message
         return chat;
     }
 
-    public void setChat(String chat)
+    public void setChat(String chat) // <- Can be either a user or a chatroom depending on subtype
     {
         this.chat = chat;
     }

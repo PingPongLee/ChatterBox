@@ -12,9 +12,13 @@ package chatterbox_socketlayout;
 public class MessageSetting extends Message
 {
     /* Subtypes
-    1 : Get all users, chatrooms with messages (initial connection)
-    2 : Get chatroom
-    3 : Get private conversation    
+    1 : Request all users and chatrooms (initial connection) AND send own nick
+    2 : Request chatroom messages
+    3 : Request private conversation    
+    4 : Get users
+    5 : Get chatrooms
+    6 : Create chatroom
+    
     
     */
     private String chat;
